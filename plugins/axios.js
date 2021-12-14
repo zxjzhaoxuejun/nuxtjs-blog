@@ -16,11 +16,11 @@ export default function ({ $axios, redirect, route, store, app: { $cookies } }, 
   // 响应拦截
   $axios.onResponse((res) => {
     console.log('请求响应')
-    if (res.data.code !== 200) {
-      if (res.data.code === 50001 && route.fullPath !== '/login') {
+    if (res.data.code !== 200 && res.code !== 200) {
+      if ((res.data.code === 50001 || res.code === 50001) && route.fullPath !== '/login') {
         $cookies.remove('userInfo')
         store.commit('user/SAVE_USER_INFO', {})
-        Message.error(res.data.msg)
+        Message.error(res.data.msg || res.msg)
         redirect('/login?path=' + route.fullPath)
       } else {
         Message.error(res.data.msg)

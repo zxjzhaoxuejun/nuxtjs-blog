@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <article-mode :is-title="true" :list="list" :total="total" @onPage="pageChange" />
+    <!-- <upload-img v-model="imageUrl" /> -->
   </div>
 </template>
 
@@ -19,6 +20,7 @@ export default {
   },
   data () {
     return {
+      imageUrl: 'http://localhost:3000/public/upload/images_2021_12/1639452703918.jpg'
     }
   },
   head () {
@@ -36,7 +38,11 @@ export default {
       this.$nextTick(() => {
         this.$nuxt.refresh()
       })
+    },
+    handleAvatarSuccess () {
+      // 上传成功
     }
+
   }
 }
 </script>
