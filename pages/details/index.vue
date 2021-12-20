@@ -55,6 +55,7 @@ export default {
             isLike: false
           }
         }
+        item.reply = false
         return item
       })
     },

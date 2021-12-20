@@ -47,5 +47,12 @@ export default $axios => ({
       method: 'post',
       data
     })
+  },
+  postReply (data) {
+    return $axios({
+      url: '/api/comment/reply',
+      method: 'post',
+      data
+    })
   }
 })

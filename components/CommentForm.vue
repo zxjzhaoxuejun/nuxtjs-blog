@@ -5,7 +5,7 @@
         <div v-if="isUser" class="user-img">
           <i class="el-icon-user-solid" />
         </div>
-        <el-input v-model="form.content" placeholder="请输入" type="textarea" rows="4" />
+        <el-input v-model="form.content" :placeholder="'回复'+replyPlaceholder" type="textarea" rows="4" />
       </div>
     </el-form-item>
     <el-form-item>
@@ -33,6 +33,18 @@ export default {
     isUser: {
       type: Boolean,
       default: false
+    },
+    replyPlaceholder: {
+      type: String,
+      default: ''
+    },
+    isReply: {
+      type: Boolean,
+      default: false
+    },
+    replyId: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -59,16 +71,31 @@ export default {
         userName,
         articleId: this.$route.query.id // 文章id
       }
-      this.$api.article.postComments(params).then((res) => {
-        if (res.data.code === 200) {
-          this.form.content = ''
-          this.$message({
-            type: 'success',
-            message: res.data.msg
-          })
-          this.$emit('on-success')
-        }
-      })
+      if (this.isReply) {
+        params.replyId = this.replyId
+        // 回复
+        this.$api.article.postReply(params).then((res) => {
+          if (res.data.code === 200) {
+            this.form.content = ''
+            this.$message({
+              type: 'success',
+              message: res.data.msg
+            })
+            this.$emit('on-success')
+          }
+        })
+      } else {
+        this.$api.article.postComments(params).then((res) => {
+          if (res.data.code === 200) {
+            this.form.content = ''
+            this.$message({
+              type: 'success',
+              message: res.data.msg
+            })
+            this.$emit('on-success')
+          }
+        })
+      }
     },
     showEmoji () {
       this.isShowEmoji = true
