@@ -1,7 +1,7 @@
 <template>
   <el-upload
     class="avatar-uploader"
-    action="/api/upload/uploadImg"
+    :action="UPLOAD_URL"
     :show-file-list="false"
     :on-success="handleAvatarSuccess"
     :headers="headers"
@@ -15,6 +15,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { UPLOAD_URL } from './../config'
 export default {
   name: 'UploadImg',
   props: {
@@ -38,7 +39,12 @@ export default {
       default: 1024 * 1024 * 5
     }
   },
-  data () { return {} },
+  data () {
+    return {
+      UPLOAD_URL
+    }
+  },
+
   computed: {
     imageUrl () {
       return this.value
@@ -88,6 +94,11 @@ export default {
         color: #E0E0E0;
         line-height: 120px;
         text-align: center;
+    }
+
+    .avatar{
+        max-width: 100%;
+        height: auto;
     }
   }
 }

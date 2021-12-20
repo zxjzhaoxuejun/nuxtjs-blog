@@ -14,7 +14,7 @@
       <div class="article-list-footer">
         <span>posted @ {{ filtersTime(itemData.createTime) }} 天空之城（冷血无情）</span>
         <span class="is-link">阅读（{{ itemData.views }}）</span>
-        <span class="is-link" @click="handleComment">评论（{{ itemData.comment }}）</span>
+        <span class="is-link" @click="handleComment(itemData.articleId)">评论（{{ itemData.comment }}）</span>
         <span class="is-link" @click="handlePush">推荐（{{ itemData.recommend }}）</span>
         <!-- 博主显示 -->
         <span v-if="userInfo.userEmail=='zhaoxuejun@dhgate.com'" class="is-link" @click="handleEdit(itemData.articleId)">编辑</span>
@@ -43,12 +43,13 @@ export default {
     ...mapGetters(['token', 'userInfo'])
   },
   methods: {
-    handleComment () {
+    handleComment (id) {
       // 评论
       if (!this.token) {
         this.$router.replace('/login?path=' + this.$route.fullPath)
         return false
       }
+      this.$router.push({ name: 'details', query: { id } })
     },
     filtersTime (val) {
       return dateFormatting(val, 2)

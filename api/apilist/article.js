@@ -19,5 +19,33 @@ export default $axios => ({
       method: 'post',
       data
     })
+  },
+  postArticleImg (data) {
+    return $axios({
+      url: '/api/upload/article-img',
+      method: 'post',
+      data
+    })
+  },
+  postComments (data) {
+    return $axios({
+      url: '/api/comment/save',
+      method: 'post',
+      data
+    })
+  },
+  postCommentsList (data) {
+    return $axios({
+      url: '/api/comment/list',
+      method: 'post',
+      data
+    })
+  },
+  postLike (data) {
+    return $axios({
+      url: '/api/comment/like',
+      method: 'post',
+      data
+    })
   }
 })

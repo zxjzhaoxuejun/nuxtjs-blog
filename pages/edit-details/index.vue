@@ -31,7 +31,8 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
+import { UPLOAD_URL } from './../../config'
 export default {
   name: 'EditDetails',
   data () {
@@ -58,14 +59,38 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['token'])
+  },
   mounted () {
     this.init_wangeditor()
   },
   methods: {
     init_wangeditor () {
+      const _self = this
       const editor = this.$wangeditor('#article_content')
       // 配置图片上传服务器地址
-      editor.config.uploadImgServer = ''
+      // editor.config.uploadImgServer = UPLOAD_URL
+      editor.config.uploadImgHeaders = {
+        enctype: 'multipart/form-data'
+      }
+      editor.config.uploadImgParams = {
+        enctype: 'multipart/form-data'
+      }
+      // editor.config.uploadFileName = 'file'
+      editor.config.customUploadImg = function (resultFiles, insertImgFn) {
+        // resultFiles 是 input 中选中的文件列表
+        // insertImgFn 是获取图片 url 后，插入到编辑器的方法
+        const file = resultFiles[0]
+        const formData = new FormData()
+        formData.set('file', file)
+        formData.set('name', file.name)
+        _self.$api.article.postArticleImg(formData).then((res) => {
+          // 上传图片，返回结果，将图片插入到编辑器中
+          // console.log(res.data.filename)
+          insertImgFn(res.data.data.filename)
+        })
+      }
       editor.config.onchange = (html) => {
         this.form.content = html
       }
@@ -81,6 +106,7 @@ export default {
               type: 'success'
             })
             this.resetForm()
+            this.$router.push({ name: 'home' })
           })
         } else {
           console.log('error submit!!')

@@ -1,27 +1,35 @@
 <template>
   <div class="app-container">
-    <div class="desc">
-      <div class="desc-head">
-        <div class="desc-title">
-          {{ details.title }}
+    <el-row>
+      <el-col :span="18">
+        <div class="desc">
+          <div class="desc-head">
+            <div class="desc-title">
+              {{ details.title }}
+            </div>
+            <div class="desc-info">
+              <span>发布者：{{ details.auth }}</span>
+              <span>时间：{{ filtersTime(details.createTime) }}</span>
+              <span>阅读量：{{ details.views }}</span>
+              <span>评论数：{{ details.comment }}</span>
+              <span>推荐数：{{ details.recommend }}</span>
+            </div>
+          </div>
+          <div class="desc-con" v-html="details.content" />
         </div>
-        <div class="desc-info">
-          <span>发布者：{{ details.auth }}</span>
-          <span>时间：{{ filtersTime(details.createTime) }}</span>
-          <span>阅读量：{{ details.views }}</span>
-          <span>评论数：{{ details.comment }}</span>
-          <span>推荐数：{{ details.recommend }}</span>
-        </div>
-      </div>
-      <div class="desc-con" v-html="details.content" />
-    </div>
+        <comments :comment-list="commentList" @on-load="onload" @on-comment="onLoadCommentList" />
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
+import Comments from '../../components/Comments.vue'
+// import Emoji from '../../components/Emoji.vue'
 import { dateFormatting } from './../../plugins/filters'
 export default {
   name: 'Details',
+  components: { Comments },
   async asyncData ({ route, app: { $api } }) {
     const { id } = route.query
     const res = await $api.article.getArticleDesc({ articleId: Number(id) })
@@ -30,20 +38,37 @@ export default {
   data () {
     return {
       // details: {}
+      commentList: []
     }
   },
   created () {
-    // this.getDetails()
+    this.getComment()
   },
   methods: {
-    // getDetails () {
-    //   const { id } = this.$route.query
-    //   this.$api.article.getArticleDesc({ articleId: Number(id) }).then((res) => {
-    //     this.details = res.data.data.data
-    //   })
-    // },
+    async getComment () {
+      const { id } = this.$route.query
+      const list = await this.$api.article.postCommentsList({ articleId: Number(id) })
+      console.log(list.data.data)
+      this.commentList = list.data.data.list.map((item) => {
+        if (!item.likeStatus) {
+          item.likeStatus = {
+            isLike: false
+          }
+        }
+        return item
+      })
+    },
     filtersTime (val) {
       return dateFormatting(val, 2)
+    },
+    onload () {
+      this.$nextTick(() => {
+        this.$nuxt.refresh()
+        this.getComment()
+      })
+    },
+    onLoadCommentList () {
+      this.getComment()
     }
   }
 }

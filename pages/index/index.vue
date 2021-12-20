@@ -20,7 +20,7 @@ export default {
   },
   data () {
     return {
-      imageUrl: 'http://localhost:3000/public/upload/images_2021_12/1639452703918.jpg'
+      imageUrl: ''
     }
   },
   head () {
