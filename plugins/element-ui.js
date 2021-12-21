@@ -32,8 +32,10 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Empty
+  Empty,
+  Tooltip
 } from 'element-ui'
+Vue.use(Tooltip)
 Vue.use(Dropdown)
 Vue.use(Empty)
 Vue.use(DropdownMenu)

@@ -12,12 +12,17 @@
       </div>
       <div class="comment-footer">
         <span class="footer-time">{{ filtersTime(item.createTime) }}</span>
-        <div v-if="showFooter" class="footer-action">
-          <span @click="reply(item)"><i class="el-icon-chat-dot-square" />回复</span>
-          <span :class="{'active':item.likeStatus.isLike}" @click="handleLike(item)">点赞 ({{ item.like }})</span>
+        <div class="footer-action">
+          <span v-if="showFooter" @click="reply(item)"><i class="el-icon-chat-dot-square" /> 回复</span>
+          <el-tooltip v-else class="item" effect="dark" content="二级评论不开放回复功能!" placement="top">
+            <span>
+              <i class="el-icon-warning-outline" /> 提示
+            </span>
+          </el-tooltip>
+          <span :class="{'active':item.likeStatus&&item.likeStatus.isLike}" @click="handleLike(item)">点赞 ({{ item.like }})</span>
         </div>
       </div>
-      <comment-item v-for="(childItem,index) in item.replyList" :key="index" :show-footer="false" :item="childItem" />
+      <comment-item v-for="(childItem,index) in item.replyList" :key="index" :show-footer="false" :item="childItem" @on-comment-change="successReply" />
       <comment-form v-if="item.replyStatus" :is-reply="true" :reply-id="item._id" :reply-placeholder="item.userName" @on-success="successReply" />
     </div>
   </div>
@@ -49,7 +54,7 @@ export default {
       // 点赞
       const { _id, likeStatus } = item
       const { userId } = this.userInfo
-      const isLike = !likeStatus.isLike
+      const isLike = likeStatus ? !likeStatus.isLike : true
       const postParams = {
         commentId: _id,
         userId,
@@ -58,6 +63,9 @@ export default {
       this.$api.article.postLike(postParams).then((res) => {
         this.$emit('on-comment-change')
       })
+    },
+    handleWarning () {
+      // 二级评论不能回复
     },
     reply (item) {
       // 回复
