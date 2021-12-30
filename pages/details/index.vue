@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Comments from '../../components/Comments.vue'
 // import Emoji from '../../components/Emoji.vue'
 import { dateFormatting } from './../../plugins/filters'
@@ -41,14 +42,17 @@ export default {
       commentList: []
     }
   },
+  computed: {
+    ...mapGetters(['token'])
+  },
   created () {
     this.getComment()
   },
   methods: {
     async getComment () {
       const { id } = this.$route.query
-      const list = await this.$api.article.postCommentsList({ articleId: Number(id) })
-      console.log(list.data.data)
+      // postEveryBodyCommentsList
+      const list = this.token ? await this.$api.article.postCommentsList({ articleId: Number(id) }) : await this.$api.article.postEveryBodyCommentsList({ articleId: Number(id) })
       this.commentList = list.data.data.list.map((item) => {
         if (!item.likeStatus) {
           item.likeStatus = {

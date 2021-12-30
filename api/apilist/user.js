@@ -18,5 +18,12 @@ export default axios => ({
       method: 'post',
       data
     })
+  },
+  reg (data) {
+    return axios({
+      url: '/api/users/register',
+      method: 'post',
+      data
+    })
   }
 })

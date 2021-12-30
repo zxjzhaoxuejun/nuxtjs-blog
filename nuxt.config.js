@@ -77,7 +77,7 @@ export default {
   },
   proxy: {
     '/api/': {
-      target: 'http://localhost:3000', // 代理转发地址
+      target: 'http://101.43.156.37:9000', // 代理转发地址
       chageOrigin: true,
       pathRewrite: {
         // '^/api': ''
@@ -89,7 +89,7 @@ export default {
     transpile: [/^element-ui/]
   },
   server: {
-    port: 8000,
-    host: '0.0.0.0' // default: localhost
+    port: 3000,
+    host: '127.0.0.1' // default: localhost
   }
 }

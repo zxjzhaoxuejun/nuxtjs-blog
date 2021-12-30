@@ -41,6 +41,13 @@ export default $axios => ({
       data
     })
   },
+  postEveryBodyCommentsList (data) {
+    return $axios({
+      url: '/api/comment/everybody/list',
+      method: 'post',
+      data
+    })
+  },
   postLike (data) {
     return $axios({
       url: '/api/comment/like',
